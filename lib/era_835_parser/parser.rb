@@ -856,11 +856,9 @@ module Era835Parser
                   # puts "Patient Last Name: #{element}"
                   if claim_payment_information_loop
                     if patient_loop
-                      # puts 'patient loop'
                       individual_era[:patient_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
                     end
                     if subscriber_loop
-                      # puts "subscriber loop"
                       individual_era[:subscriber_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
                     end
                     if rendering_provider_loop
