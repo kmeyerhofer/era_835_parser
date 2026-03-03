@@ -57,6 +57,7 @@ module Era835Parser
       header_number_loop = false
       claim_payment_information_loop = false
       patient_loop = false
+      subscriber_loop = false
       rendering_provider_loop = false
       service_payment_information_loop = false
       bpr_amount = ''
@@ -844,56 +845,86 @@ module Era835Parser
                 when 1
                   # Patient Identifier Code
                   # puts "Patient Identifier Code: #{element}"
-                  if element == "QC"
-                    patient_loop = true
-                  else
-                    patient_loop = false
-                  end
-                  if element == "82"
-                    rendering_provider_loop = true
-                  else
-                    rendering_provider_loop = false
-                  end
+                  patient_loop = element == "QC"
+                  subscriber_loop = element == 'IL'
+                  rendering_provider_loop = element == "82"
                 when 2
                   # Entity Type Qualifier
                   # puts "Entity Type Qualifier: #{element}"
                 when 3
                   # Patient Last Name
                   # puts "Patient Last Name: #{element}"
-                  if claim_payment_information_loop && patient_loop
-                    individual_era[:patient_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
-                  end
-                  if claim_payment_information_loop && rendering_provider_loop
-                    individual_era[:rendering_provider_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                  if claim_payment_information_loop
+                    if patient_loop
+                      # puts 'patient loop'
+                      individual_era[:patient_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                    end
+                    if subscriber_loop
+                      # puts "subscriber loop"
+                      individual_era[:subscriber_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                    end
+                    if rendering_provider_loop
+                      individual_era[:rendering_provider_last_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                    end
                   end
                 when 4
                   # Patient First Name
                   # puts "Patient First Name: #{element}"
-                  if claim_payment_information_loop && patient_loop
-                    individual_era[:patient_first_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
-                    individual_era[:patient_name] = individual_era[:patient_last_name].upcase + "," + individual_era[:patient_first_name].upcase
-                  end
-                  if claim_payment_information_loop && rendering_provider_loop
-                    individual_era[:rendering_provider_first_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
-                    individual_era[:rendering_provider_name] = individual_era[:rendering_provider_last_name].upcase + "," + individual_era[:rendering_provider_first_name].upcase
+                  if claim_payment_information_loop
+                    if patient_loop
+                      individual_era[:patient_first_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                      individual_era[:patient_name] = individual_era[:patient_last_name].upcase + "," + individual_era[:patient_first_name].upcase
+                    end
+                    if subscriber_loop
+                      individual_era[:subscriber_first_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                      individual_era[:subscriber_name] = individual_era[:subscriber_last_name].upcase + "," + individual_era[:subscriber_first_name].upcase
+                    end
+                    if rendering_provider_loop
+                      individual_era[:rendering_provider_first_name] = element.strip.downcase.split(" ").map { |word| word.capitalize }.join(" ")
+                      individual_era[:rendering_provider_name] = individual_era[:rendering_provider_last_name].upcase + "," + individual_era[:rendering_provider_first_name].upcase
+                    end
                   end
                 when 5
                   # Patient Middle Initial
                   # puts "Patient Middle Initial: #{element}"
+                  if claim_payment_information_loop
+                    if patient_loop
+                      individual_era[:patient_middle_initial] = element.strip
+                    end
+                    if subscriber_loop
+                      individual_era[:subscriber_middle_initial] = element.strip
+                    end
+                  end
                 when 6
                   # Name Prefix
                   # puts "Name Prefix: #{element}"
                 when 7
                   # Patient Name Suffix
                   # puts "Patient Name Suffix: #{element}"
+                  if claim_payment_information_loop
+                    if patient_loop
+                      individual_era[:patient_suffix] = element.strip
+                    end
+                    if subscriber_loop
+                      individual_era[:subscriber_suffix] = element.strip
+                    end
+                  end
                 when 8
                   # Identification Code Qualifier
                   # puts "Identification Code Qualifier: #{element}"
                 when 9
-                  # Patient Member Number
+                  # Patient Member Number or rendering provider NPI number
                   # puts "Patient Member Number: #{element}"
-                  if claim_payment_information_loop && patient_loop
-                    individual_era[:patient_id] = element.strip
+                  if claim_payment_information_loop
+                    if patient_loop
+                      individual_era[:patient_id] = element.strip
+                    end
+                    if subscriber_loop
+                      individual_era[:subscriber_id] = element.strip
+                    end
+                    if rendering_provider_loop
+                      individual_era[:rendering_provider_npi] = element.strip
+                    end
                   end
                 end
               when "SVC"
