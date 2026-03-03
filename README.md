@@ -43,13 +43,21 @@ if !era[:checks].nil?
     if !check[:eras].nil?
       check[:eras].each do |era_counter, individual_era|
         puts individual_era[:era_text] # ERA text
-        puts individual_era[:patient_id] # Patient ID
+        puts individual_era[:patient_id] # Patient ID / Member number
         puts individual_era[:patient_name] # Patient name
-        puts individual_era[:patient_last_name] # Patient last name (titlized)
-        puts individual_era[:patient_first_name] # Patient first name (titlized)
+        puts individual_era[:patient_last_name] # Patient last name (titleized)
+        puts individual_era[:patient_first_name] # Patient first name (titleized)
+        puts individual_era[:patient_middle_initial] # Patient middle initial
+        puts individual_era[:patient_suffix] # Patient suffix
+        puts individual_era[:subscriber_id] # Subscriber ID / Member number
+        puts individual_era[:subscriber_name] # Subscriber name
+        puts individual_era[:subscriber_last_name] # Subscriber last name (titleized)
+        puts individual_era[:subscriber_first_name] # Subscriber first name (titleized)
+        puts individual_era[:subscriber_middle_initial] # Subscriber middle initial
+        puts individual_era[:subscriber_suffix] # Subscriber suffix
         puts individual_era[:rendering_provider_name] # Rendering provider name
-        puts individual_era[:rendering_provider_last_name] # Rendering provider last name (titlized)
-        puts individual_era[:rendering_provider_first_name] # Rendering provider first name (titlized)
+        puts individual_era[:rendering_provider_last_name] # Rendering provider last name (titleized)
+        puts individual_era[:rendering_provider_first_name] # Rendering provider first name (titleized)
         puts individual_era[:charge_amount] # Total charge amount (integer)
         puts individual_era[:payment_amount] # Total payment amount (integer)
         puts individual_era[:account_number] # Account number
